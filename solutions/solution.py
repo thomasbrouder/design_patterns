@@ -89,3 +89,36 @@ exercise_2 = Exercise(
     client_code(adapter)
     """
 )
+
+exercise_3 = Exercise(
+    task="Create a new SectionSelector using numpy and an Adapter to plug it to the code. Can you draw the associated UML ?",
+    goal="",
+    hint="""""",
+    solution="""
+        def to_polyline(numpy_poly):
+            return polyline.Polyline(
+                    [vertex.Vertex(x, y) for x, y in list(zip(*numpy_poly))]
+            )
+        
+        
+        class NewSectionSelector():
+            def __init__(self, limit, placement):
+                self.limit = limit
+                self.placement = placement
+        
+            def new_filter(self):
+                return [poly for poly in self.placement if poly[1].max() < self.limit]
+           
+            
+        class Adapter(SectionSelector, NewSectionSelector):
+            def filter(self):
+                self.placement = [poly.to_numpy() for poly in self.placement]
+                section = self.new_filter()
+                return [to_polyline(numpy_poly) for numpy_poly in section]
+                
+        new_section_selector = Adapter(placement=placement, limit=50)
+        new_section = new_section_selector.filter()
+        
+        plot_polylines(new_section, "new_section")
+        """
+)

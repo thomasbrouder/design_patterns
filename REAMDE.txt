@@ -1,2 +1,0 @@
-Setup a new virtualenv
-pip install PyYAML, notebook, json

@@ -49,23 +49,29 @@ class Exercise():
 
 
 exercise_1 = Exercise(
-    task="Create an Adapter class which allows NewService instance to be compatible with client code.",
+    task="Create an Adapter class which allows NewService instance to be compatible with client code."
+         "When you're finished, client_code(new_service) return should be readable and understandable by a human being.",
     goal="Montrer que l'on peut faire de l'héritage multiple en Python Montrer qu'il faut que le nouveau"
          " service implémente l'interface de l'ancien service",
     hint="""""",
     solution="""
-    class Adapter(NewService):
-        '''
-        Adapter allows NewService instance to be compatible with client code.
-        The client is now compatible with NewService instance through the Adapter.
-        Adapter changes NewService interface so that it is understandable by client code.
-        Adapter makes as if it was an Service instance.
-        '''
-        def request(self):
-            new_service_req = self.specific_request()
-            return new_service_req[::-1]
-    adapter = Adapter()
-    client_code(adapter)
+        # Object adapter: the adapter implements the interface of one object and wraps the other one.
+        class ObjectAdapter(Client):
+            def method(self, service):
+                print(service.specific_request()[::-1])    
+            
+        new_service = NewService()
+        object_adapter = ObjectAdapter()
+        object_adapter.method(new_service)
+        
+        
+        # Class adapter: the adapter inherits interfaces from both objects at the same time.
+        class ClassAdapter(Client, NewService):
+            def method(self):
+                print(super().specific_request()[::-1])
+        
+        class_adapter = ClassAdapter()
+        class_adapter.method()
     """
 )
 
@@ -96,6 +102,9 @@ exercise_3 = Exercise(
     hint="""""",
     solution="""
         def to_polyline(numpy_poly):
+            '''
+            numpy_poly: tuple(np.ndarray, np.ndarray)
+            '''
             return polyline.Polyline(
                     [vertex.Vertex(x, y) for x, y in list(zip(*numpy_poly))]
             )

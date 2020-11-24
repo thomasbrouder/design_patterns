@@ -1,4 +1,6 @@
 # design_patterns
 
 Setup a new virtualenv
-pip install PyYAML, notebook, json, tekyntools
+install tekyntools
+pip install PyYAML, notebook, numpy==1.19.3
+

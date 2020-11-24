@@ -101,6 +101,7 @@ exercise_3 = Exercise(
     goal="",
     hint="""""",
     solution="""
+        import numpy as np
         def to_polyline(numpy_poly):
             '''
             numpy_poly: tuple(np.ndarray, np.ndarray)
@@ -117,17 +118,19 @@ exercise_3 = Exercise(
         
             def new_filter(self):
                 return [poly for poly in self.placement if poly[1].max() < self.limit]
-           
-            
-        class Adapter(SectionSelector, NewSectionSelector):
-            def filter(self):
-                self.placement = [poly.to_numpy() for poly in self.placement]
-                section = self.new_filter()
-                return [to_polyline(numpy_poly) for numpy_poly in section]
-                
-        new_section_selector = Adapter(placement=placement, limit=50)
-        new_section = new_section_selector.filter()
         
-        plot_polylines(new_section, "new_section")
+        
+        class Adapter(PolylinePlotter, NewSectionSelector):
+            def __init__(self, placement, limit):
+                self.placement = np.array([poly.to_numpy() for poly in placement])  # Adapter for input interface. Object conversion is made as quick as possible
+                self.limit = limit
+                
+            def filter(self):
+                section = self.new_filter()
+                return [to_polyline(numpy_poly) for numpy_poly in section] # Adapter for output interface. Object conversion is made as late as possible
+        
+        adapter = Adapter(placement=placement, limit=50)
+        adapter.filter()
+        plotter.plot_polylines(section, title="Section")
         """
 )
